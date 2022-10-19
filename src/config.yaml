@@ -1,0 +1,67 @@
+task_name: "train.cls.virt_gnn"
+use_cuda: True
+prefix: test
+
+graph_slots: ["pagetype"]
+graph_slots_size: [100]
+gfeat_mode: sum  # concat
+
+warm_start_from: null
+model_path_for_infer: null
+metrics: hard_mse
+collate_fn: GfeatCollateFn # CollateFn
+
+
+# data config
+debug_path: null #./xtmp
+weighted_sampling: False
+dataset_type: LocalDataset # NewFormatDataset 
+train_data_path: ../data/train
+dev_data_path: ../data/dev
+test_data_path: ../data/dev
+
+tag_size: 26306
+slots: ["tag_name", "id_pure_text", "is_hidden", "width", "height", "xpos", "ypos", "visible", "font_size", "font_style", "font_weight", "direction", "line_height", "border_bottom_style", "border_bottom_width", "border_left_style", "border_left_width", "border_right_style", "border_right_width", "border_top_style", "border_top_width", "outline_style", "outline_width", "margin_bottom", "margin_left", "margin_right", "margin_top", "padding_bottom", "padding_left", "padding_right", "padding_top", "overflow_x", "overflow_y", "display", "visibility", "position"]
+slots_size: [1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000]
+self_loop: True
+symmetry: True
+full_connected: False
+
+model_type: "GNNModel" # GNNModel RegModel
+label_norm: False
+num_layers: 5
+layer_type: "simple_gat"  # "transformer_conv" #"simple_gat" # "gin" 
+emb_size: 64
+hidden_size: 64
+graph_pool_type: virtual
+num_class: 2
+dropout_prob: 0.2
+l2_norm: True
+softsign: True
+
+# runconfig
+epochs: 25
+batch_size: 32 #128
+lr: 0.0001   
+num_workers: 4
+shuffle: True
+shuffle_size: 1000
+save_steps: 2000
+log_steps: 5
+max_ckpt: 4
+skip_steps: 0  # 前n个steps不打log
+eval_steps: 100 # 320 # 636 #81
+eval_max_steps: 1000000
+
+
+# logger
+stdout: True
+log_dir: ../logs
+log_filename: log.txt
+save_dir: ../checkpoints
+output_dir: ../outputs
+files2saved: ["*.sh", "*.py", "*.yaml", "./utils"]
+
+hadoop_bin: null
+fs_name: null
+fs_ugi: null
